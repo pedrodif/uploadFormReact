@@ -8,7 +8,7 @@ interface iProps{
 function Error({erros}: iProps){
     console.log(erros)
     return(
-        <span>{erros ? "CPF válido" : "CPF deve ter 11 dígitos"}</span>
+        <span>{erros ? " " : "CPF deve ter 11 dígitos"}</span>
     )
 }
 
