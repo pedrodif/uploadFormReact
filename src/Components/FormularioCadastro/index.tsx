@@ -2,45 +2,49 @@ import React, { useState } from "react";
 import { Button, TextField, Switch, FormControlLabel } from "@material-ui/core";
 import { iProps2 } from "./type";
 
+
 interface iProps {
+
   // aoEnviar:(dados: iProps2) => void;
   // aoEnviar é o valor que estou passando(dados é o parametro e o iProps2 é a tipagem feita para o parametro)
   // o void é por que não tem retorno
-  // handleSubmit: (values: iProps2) => void;
-  setForm: ({}: iProps2) => void; 
-}
+ 
+  //setForm é a função(setter) que permite alterar o estado do formulário, aqui ela está sendo passada como propriedade, 
+  //e a sua assinatura é feita no parametro que está na função que gera o componente. 
 
-function FormularioCadastro({ setForm }: iProps){
+  setForm: ({}: iProps2) => void; 
+  setErros: React.Dispatch<React.SetStateAction<boolean>>;
+  erros: boolean; 
+} 
+
+function FormularioCadastro({ setForm, setErros, erros }: iProps){
   const [nome, setNome] = useState("");
   const [sobrenome, setSobrenome] = useState("");
   const [cpf, setCpf] = useState("");
   const [promocoes, setPromocoes] = useState(true);
   const [novidades, setNovidades] = useState(true);
+  const [msgError, setMsgError] = useState({cpf: {texto: "" }});
 
   const submitForm = (event: any) => {
     event.preventDefault();
-    console.log(event.target)
-
-    const formatedValues = {
-      nome: event.target,
-      sobrenome: event.target,
-      cpf: event.target
-    }
     setForm({nome, sobrenome, cpf, promocoes, novidades});
   };
 
+  function validarCPF(){
+    if(cpf.length !== 11){ 
+      setErros(false);
+      setMsgError({cpf: {texto: "CPF deve ter 11 dígitos" }});
+   
+    }else{
+      setErros(true);
+      setMsgError({cpf: {texto: " " }});
+      
+    }
+  }
 
-  // const aoEnviar = props.aoEnviar;
   return (
     <form
-      // onSubmit={(event) => {
-      //   event.preventDefault();
-      //   // console.log(event.target);
-      //   handleSubmit(event.target);
-      // }}
-
       onSubmit={(value) => submitForm(value)}
-  
     >
       <TextField
         value={nome}
@@ -56,10 +60,12 @@ function FormularioCadastro({ setForm }: iProps){
       />
 
       <TextField
+
         value={sobrenome}
         onChange={(event) => {
           setSobrenome(event.target.value);
         }}
+
         id="sobrenome"
         name="sobrenome"
         label="Sobrenome"
@@ -73,6 +79,10 @@ function FormularioCadastro({ setForm }: iProps){
         onChange={(event) => {
           setCpf(event.target.value);
         }}
+
+        onBlur={validarCPF}
+        error={!erros}
+        helperText={msgError.cpf.texto}
         id="cpf"
         name="cpf"
         label="CPF"

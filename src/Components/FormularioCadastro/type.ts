@@ -1,7 +1,8 @@
 export interface iProps2{
-    cpf: any;
+    cpf: string;
     nome: any;
     novidades: any;
     promocoes: any;
     sobrenome: any;
 }
+
